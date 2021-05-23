@@ -1,0 +1,20 @@
+#!/bin/bash
+
+set -e  # Exit immediately if a command exits with a non-zero status.
+set -x  # All executed commands are printed to the terminal
+
+mv /tmp/boot /usr/local/boot
+
+export DEBIAN_FRONTEND=noninteractive
+
+aptitude update ; aptitude install -y ca-certificates
+
+wget https://ipfs.io/ipns/dist.ipfs.io/go-ipfs/v0.8.0/go-ipfs_v0.8.0_linux-amd64.tar.gz -O /tmp/ipfs.tar.gz
+cd /tmp
+tar -pxzf ipfs.tar.gz
+./go-ipfs/install.sh
+
+mkdir -p /root/.ipfs/blocks
+
+apt-get -y autoremove ; aptitude -y autoclean ; apt-get -y autoclean
+rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /root/.aptitude /root/.wget-hsts
